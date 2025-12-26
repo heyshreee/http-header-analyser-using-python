@@ -15,6 +15,9 @@ A screenshot demonstrating the CLI tool's output.
 - **Parallel Scanning**: Scan multiple URLs concurrently for faster results.
 - **JSON Export**: Save analysis reports to a JSON file for further processing.
 - **Rich Output**: Beautiful, readable terminal output using the `rich` library.
+- **Web Interface**: A modern, responsive web interface for easy analysis.
+
+![Web Interface](assets/frontend-image.png)
 
 ## Installation
 
@@ -64,6 +67,28 @@ python -m main https://example.com https://google.com --parallel
 ```bash
 python -m main https://example.com --json report.json
 ```
+
+## Web Interface
+
+The project includes a modern web interface for easier analysis.
+
+### Running the Web Interface
+
+1. **Start the Backend API:**
+
+   Make sure you have installed the dependencies.
+
+   ```bash
+   uvicorn api:app --reload
+   ```
+
+   The API will start at `http://127.0.0.1:8000`.
+
+2. **Open the Frontend:**
+
+   Open the `frontend/index.html` file in your web browser. You can simply drag and drop the file into a browser tab or use a local server (e.g., Live Server in VS Code).
+
+   _Note: The frontend communicates with the backend at `http://127.0.0.1:8000`._
 
 ## Project Structure
 

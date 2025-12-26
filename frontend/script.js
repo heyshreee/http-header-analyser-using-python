@@ -38,10 +38,16 @@ analysisForm.addEventListener('submit', async (e) => {
 
     try {
         const response = await fetch(`http://127.0.0.1:8000/analyze?url=${encodeURIComponent(url)}`);
+        // if (!response.ok) {
+        //     showError(`Error: ${response.status} ${response.statusText} ${response.error}`);
+        //     return;
+        // }
         if (!response.ok) {
-            showError(`Error: ${response.status} ${response.statusText}`);
+            const errData = await response.json();
+            showError(errData.detail || "Something went wrong");
             return;
         }
+
         const data = await response.json();
 
         displayUrl.textContent = data.url;
@@ -58,8 +64,8 @@ analysisForm.addEventListener('submit', async (e) => {
         scanId.textContent = Math.random().toString(36).substr(2, 9).toUpperCase();
 
         moduleCount.textContent = `${currentRisks.length} Modules Loaded`;
-        
-        
+
+
         currentScanId = scanId.textContent;
 
         currentRisks.forEach((risk) => {
@@ -74,6 +80,7 @@ analysisForm.addEventListener('submit', async (e) => {
 
     } catch (error) {
         showError("An error occurred while processing your request.");
+        clearAll()
     } finally {
         setLoading(false);
     }
@@ -209,6 +216,7 @@ function clearAll() {
     risksList.innerHTML = "";
     displayUrl.textContent = "";
     urlInput.value = '';
+    clearInputBtn.classList.add('hidden');
 }
 
 const showError = (msg) => {
