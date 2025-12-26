@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP Header Analyzer</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="min-h-screen bg-gray-50 text-gray-800 selection:bg-indigo-100">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="search" class="w-5 h-5 text-white"></i>
+                </div>
+                <a href="#home"
+                    class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                    WebScanner
+                </a>
+            </div>
+            <div class="text-sm text-gray-500 hidden sm:block">
+                Web Security Header Scanner
+            </div>
+
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="max-w-3xl mx-auto mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                    Analyze HTTP Security Headers in Seconds
+                </h2>
+                <p class="text-gray-600 text-lg">
+                    Enter a website URL to detect missing security headers, configuration risks,
+                    and potential exposure points — instantly.
+                </p>
+            </div>
+
+            <form action="# " method="get" id="analysisForm" class="relative group">
+                <div id="glowEffect"
+                    class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-75 blur transition duration-200 group-hover:opacity-100">
+                </div>
+
+                <div class="relative bg-white rounded-xl shadow-xl flex items-center p-2">
+                    <div class="pl-4 pr-2 text-gray-400">
+                        <i data-lucide="globe" class="w-6 h-6"></i>
+                    </div>
+                    <input type="text" name="url" id="urlInput" placeholder="Enter URL to analyze" required
+                        class="flex-1 p-3 outline-none text-lg text-gray-700 placeholder-gray-400 bg-transparent" />
+                    <button type="button" id="clearInputBtn"
+                        class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    <button type="submit" id="submitBtn"
+                        class="ml-2 px-8 py-3 rounded-lg font-semibold text-white transition-all duration-200 flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30">
+                        <span id="btnText">Analyze</span>
+                        <i id="btnIcon" class="hidden w-5 h-5 animate-spin" data-lucide="refresh-cw"></i>
+                    </button>
+                </div>
+            </form>
+            <div id="errorMsg"
+                class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700 fade-in">
+                <i data-lucide="alert-circle" class="w-5 h-5 mr-2 flex-shrink-0"></i>
+                <span id="errorText"></span>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="resultsSection" class="hidden slide-up">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900">Analysis Results</h3>
+                    <p class="text-gray-500 mt-1 flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                        Scan completed successfully for: <span id="displayUrl"
+                            class="font-mono ml-1 text-indigo-600"></span>
+                    </p>
+                </div>
+
+                <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                    <button id="clearResultsBtn"
+                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium">
+                        Clear Results
+                    </button>
+                    <button id="saveReportBtn"
+                        class="px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all duration-200 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-600">
+                        <i id="saveIcon" data-lucide="download" class="w-4 h-4"></i>
+                        <span id="saveText">Save JSON</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Security Risks Section -->
+            <div id="risksContainer" class="mt-8 hidden">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <i data-lucide="shield-alert" class="w-6 h-6 mr-2 text-gray-600"></i>
+                    Security Risk Assessment
+                </h3>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div id="risksList" class="divide-y divide-gray-100">
+                        <!-- Risks will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Status Bar for Results -->
+            <div
+                class="mt-8 bg-white rounded-lg border border-gray-200 p-4 flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600 shadow-sm">
+                <div class="flex items-center space-x-6">
+                    <span class="flex items-center">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></div>
+                        <span id="scanTime">Processed in --s</span>
+                    </span>
+                    <span class="flex items-center">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                        <span id="moduleCount">-- Modules Loaded</span>
+                    </span>
+                </div>
+                <div class="font-mono text-xs text-gray-400">
+                    ID: <span id="scanId">-----</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
